@@ -3,12 +3,17 @@
 
 // Driver Class
 class Driver {
-    constructor(name, location, dutyStatus = "Off-Duty", driveHours = 11, dutyHours = 14) {
+    constructor(name, location, dutyStatus = "Off-Duty", driveHours = 11, dutyHours = 14, avgSpeed = 60) {
         this.name = name;
         this.location = location;
         this.dutyStatus = dutyStatus;
         this.driveHours = driveHours;
         this.dutyHours = dutyHours;
+        this.avgSpeed = avgSpeed;
+    }
+
+    getTravelTime(location, destination, avgSpeed) {
+        return (destination - location) / avgSpeed;
     }
 }
 
@@ -31,13 +36,50 @@ class Trailer {
     }
 }
 
-const bob = new Driver("Bob", "Phoenix");
-const dave = new Driver("Dave", "Tonopah", "Sleeper Berth", 0, 0);
+const distances = {
+    phoenix: {
+        losAngeles: 370,
+        lasVegas: 300
+    },
 
-const load1 = new Load(1001, "Los Angeles", "Phoenix", "10/12/2026 0800", "10/13/2026 0900");
-const trailer1 = new Trailer(50213, "Phoenix", "Dirty")
+    losAngeles: {
+        phoenix: 370,
+        lasVegas: 270
+    },
 
-console.log(bob.name + " " + bob.location + " " + bob.dutyStatus + " " + bob.driveHours + " " + bob.dutyHours);
-console.log(dave.name + " " + dave.location + " " + dave.dutyStatus + " " + dave.driveHours + " " + dave.dutyHours);
-console.log(load1.loadNumber + ", Pickup: " + load1.origin + ": " + load1.pickupAppt + ", Destination: " + load1.destination + ": " + load1.deliveryAppt + ", " + load1.currentStatus);
-console.log(trailer1.trailerNumber + ", Location: " + trailer1.currentLocation + ", Clean or Dirty?: " + trailer1.cleanStatus);
+    lasVegas: {
+        phoenix: 300,
+        losAngeles: 270
+    }
+};
+
+class Location {
+    constructor(key, name, distance) {
+        this.key = key;
+        this.name = name;
+        this.distance = distance;
+    }
+    getDistance(key) {
+        return this.distance[key];
+    }
+}
+
+const phoenix = new Location("phoenix", "Phoenix", distances.phoenix);
+const losAngeles = new Location("losAngeles", "Los Angeles", distances.losAngeles);
+
+const bob = new Driver("Bob", phoenix);
+const dave = new Driver("Dave", losAngeles, "Sleeper Berth", 0, 0);
+
+const load1 = new Load(1001, losAngeles, phoenix, "10/12/2026 0800", "10/13/2026 0900");
+const trailer1 = new Trailer(50213, phoenix, "Dirty");
+
+// console.log("Name: " + bob.name + ", Location: " + bob.location.name + ", Distance to Load #1001: " + bob.location.getDistance(load1.origin.key) + ", Duty Status: " + bob.dutyStatus + ", Drive Hours: " + bob.driveHours + ", On-Duty Hours: " + bob.dutyHours);
+// console.log("Name: " + dave.name + ", Location: " + dave.location.name + ", Duty Status: " + dave.dutyStatus + ", Drive Hours: " + dave.driveHours + ", On-Duty Hours: " + dave.dutyHours);
+
+// console.log("Load #" + load1.loadNumber + ", Pickup: " + load1.origin.name + ": " + load1.pickupAppt + ", Destination: " + load1.destination.name + ": " + load1.deliveryAppt + ", " + load1.currentStatus);
+// console.log("Trailer #" + trailer1.trailerNumber + ", Location: " + trailer1.currentLocation.name + ", Clean or Dirty?: " + trailer1.cleanStatus);
+
+// console.log("City Name: " + phoenix.name + ", Distance to Los Angeles: " + phoenix.getDistance("losAngeles") + ", Distance to Las Vegas: " + phoenix.getDistance("lasVegas"));
+// console.log("City Name: " + losAngeles.name + ", Distance to Phoenix: " + losAngeles.getDistance("phoenix") + ", Distance to Las Vegas: " + losAngeles.getDistance("lasVegas"));
+
+console.log(bob.getTravelTime(load1.origin));

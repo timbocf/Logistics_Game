@@ -12,8 +12,12 @@ class Driver {
         this.avgSpeed = avgSpeed;
     }
 
-    getTravelTime(location, destination, avgSpeed) {
-        return (destination - location) / avgSpeed;
+    getTravelTime(destination) {
+        const distance = this.location.getDistance(destination.key);
+        const travelTime = distance / this.avgSpeed;
+        const hours = Math.floor(travelTime);
+        const minutes = Math.floor((travelTime % hours) * 60);
+        return "Travel time is: " + hours + " hours & " + minutes + " minutes";
     }
 }
 

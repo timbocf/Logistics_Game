@@ -1,6 +1,8 @@
 // Logistics Game
 // Version 1
 
+const gameTime = new Date(2026, 9, 11, 20, 0);
+
 // Driver Class
 class Driver {
     constructor(name, location, dutyStatus = "Off-Duty", driveHours = 11, dutyHours = 14, avgSpeed = 60) {
@@ -14,10 +16,7 @@ class Driver {
 
     getTravelTime(destination) {
         const distance = this.location.getDistance(destination.key);
-        const travelTime = distance / this.avgSpeed;
-        const hours = Math.floor(travelTime);
-        const minutes = Math.floor((travelTime % hours) * 60);
-        return "Travel time is: " + hours + " hours & " + minutes + " minutes";
+        return distance / this.avgSpeed;
     }
 }
 
@@ -74,16 +73,24 @@ const losAngeles = new Location("losAngeles", "Los Angeles", distances.losAngele
 const bob = new Driver("Bob", phoenix);
 const dave = new Driver("Dave", losAngeles, "Sleeper Berth", 0, 0);
 
-const load1 = new Load(1001, losAngeles, phoenix, "10/12/2026 0800", "10/13/2026 0900");
+const load1 = new Load(1001, losAngeles, phoenix, new Date(2026, 9, 12, 8, 0),
+    new Date(2026, 9, 13, 9, 0));
 const trailer1 = new Trailer(50213, phoenix, "Dirty");
 
 // console.log("Name: " + bob.name + ", Location: " + bob.location.name + ", Distance to Load #1001: " + bob.location.getDistance(load1.origin.key) + ", Duty Status: " + bob.dutyStatus + ", Drive Hours: " + bob.driveHours + ", On-Duty Hours: " + bob.dutyHours);
 // console.log("Name: " + dave.name + ", Location: " + dave.location.name + ", Duty Status: " + dave.dutyStatus + ", Drive Hours: " + dave.driveHours + ", On-Duty Hours: " + dave.dutyHours);
 
-// console.log("Load #" + load1.loadNumber + ", Pickup: " + load1.origin.name + ": " + load1.pickupAppt + ", Destination: " + load1.destination.name + ": " + load1.deliveryAppt + ", " + load1.currentStatus);
+// console.log("Load #" + load1.loadNumber + ", Pickup: " + load1.origin.name + ": " + load1.pickupAppt.toLocaleString() + ", Destination: " + load1.destination.name + ": " + load1.deliveryAppt.toLocaleString() + ", " + load1.currentStatus);
 // console.log("Trailer #" + trailer1.trailerNumber + ", Location: " + trailer1.currentLocation.name + ", Clean or Dirty?: " + trailer1.cleanStatus);
 
 // console.log("City Name: " + phoenix.name + ", Distance to Los Angeles: " + phoenix.getDistance("losAngeles") + ", Distance to Las Vegas: " + phoenix.getDistance("lasVegas"));
 // console.log("City Name: " + losAngeles.name + ", Distance to Phoenix: " + losAngeles.getDistance("phoenix") + ", Distance to Las Vegas: " + losAngeles.getDistance("lasVegas"));
 
-console.log(bob.getTravelTime(load1.origin));
+const travelHours = bob.getTravelTime(load1.origin);
+const bobArrivalTime = gameTime.getTime() + (travelHours * 60 * 60 * 1000);
+
+if (bobArrivalTime > load1.pickupAppt) {
+    console.log("LFG");
+} else if (bobArrivalTime < load1.pickupAppt) {
+    console.log("Nope!");
+}

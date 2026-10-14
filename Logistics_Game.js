@@ -86,11 +86,15 @@ const trailer1 = new Trailer(50213, phoenix, "Dirty");
 // console.log("City Name: " + phoenix.name + ", Distance to Los Angeles: " + phoenix.getDistance("losAngeles") + ", Distance to Las Vegas: " + phoenix.getDistance("lasVegas"));
 // console.log("City Name: " + losAngeles.name + ", Distance to Phoenix: " + losAngeles.getDistance("phoenix") + ", Distance to Las Vegas: " + losAngeles.getDistance("lasVegas"));
 
-const travelHours = bob.getTravelTime(load1.origin);
+let travelHours = bob.getTravelTime(load1.origin);
+
+if (travelHours > bob.driveHours) {
+    travelHours += 10;
+}
 const bobArrivalTime = gameTime.getTime() + (travelHours * 60 * 60 * 1000);
 
-if (bobArrivalTime > load1.pickupAppt) {
-    console.log("LFG");
-} else if (bobArrivalTime < load1.pickupAppt) {
-    console.log("Nope!");
+if (bobArrivalTime <= load1.pickupAppt) {
+    console.log("All good");
+} else {
+    console.log("Bob won't make it");
 }

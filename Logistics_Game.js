@@ -18,6 +18,16 @@ class Driver {
         const distance = this.location.getDistance(destination.key);
         return distance / this.avgSpeed;
     }
+
+    getTripTime(destination) {
+        let travelHours = this.getTravelTime(destination);
+
+        if (travelHours > this.driveHours) {
+            travelHours += 10;
+        }
+
+        return travelHours;
+    }
 }
 
 class Load {
@@ -77,24 +87,5 @@ const load1 = new Load(1001, losAngeles, phoenix, new Date(2026, 9, 12, 8, 0),
     new Date(2026, 9, 13, 9, 0));
 const trailer1 = new Trailer(50213, phoenix, "Dirty");
 
-// console.log("Name: " + bob.name + ", Location: " + bob.location.name + ", Distance to Load #1001: " + bob.location.getDistance(load1.origin.key) + ", Duty Status: " + bob.dutyStatus + ", Drive Hours: " + bob.driveHours + ", On-Duty Hours: " + bob.dutyHours);
-// console.log("Name: " + dave.name + ", Location: " + dave.location.name + ", Duty Status: " + dave.dutyStatus + ", Drive Hours: " + dave.driveHours + ", On-Duty Hours: " + dave.dutyHours);
-
-// console.log("Load #" + load1.loadNumber + ", Pickup: " + load1.origin.name + ": " + load1.pickupAppt.toLocaleString() + ", Destination: " + load1.destination.name + ": " + load1.deliveryAppt.toLocaleString() + ", " + load1.currentStatus);
-// console.log("Trailer #" + trailer1.trailerNumber + ", Location: " + trailer1.currentLocation.name + ", Clean or Dirty?: " + trailer1.cleanStatus);
-
-// console.log("City Name: " + phoenix.name + ", Distance to Los Angeles: " + phoenix.getDistance("losAngeles") + ", Distance to Las Vegas: " + phoenix.getDistance("lasVegas"));
-// console.log("City Name: " + losAngeles.name + ", Distance to Phoenix: " + losAngeles.getDistance("phoenix") + ", Distance to Las Vegas: " + losAngeles.getDistance("lasVegas"));
-
-let travelHours = bob.getTravelTime(load1.origin);
-
-if (travelHours > bob.driveHours) {
-    travelHours += 10;
-}
 const bobArrivalTime = gameTime.getTime() + (travelHours * 60 * 60 * 1000);
 
-if (bobArrivalTime <= load1.pickupAppt) {
-    console.log("All good");
-} else {
-    console.log("Bob won't make it");
-}
